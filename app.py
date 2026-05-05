@@ -102,8 +102,8 @@ col1, col2 = st.columns(2)
 # 🟡 Equipo 1
 with col1:
     st.markdown(f"""
-    <div style='display:flex; align-items:center; justify-content:center; gap:8px;'>
-        <img src='https://flagcdn.com/w30/co.png'>
+    <div style='text-align:center;'>
+        <img src='https://flagcdn.com/w40/co.png'><br>
         <b>{equipo1}</b>
     </div>
     """, unsafe_allow_html=True)
@@ -112,15 +112,15 @@ with col1:
         "",
         min_value=0,
         max_value=20,
-        key="goles_local",  # 🔥 clave única
+        key="g1",
         label_visibility="collapsed"
     )
 
 # 🔵 Equipo 2
 with col2:
     st.markdown(f"""
-    <div style='display:flex; align-items:center; justify-content:center; gap:8px;'>
-        <img src='https://flagcdn.com/w30/ar.png'>
+    <div style='text-align:center;'>
+        <img src='https://flagcdn.com/w40/ar.png'><br>
         <b>{equipo2}</b>
     </div>
     """, unsafe_allow_html=True)
@@ -129,10 +129,9 @@ with col2:
         "",
         min_value=0,
         max_value=20,
-        key="goles_visitante",  # 🔥 clave única
+        key="g2",
         label_visibility="collapsed"
     )
-
 
 if st.session_state.admin_visible:
     
