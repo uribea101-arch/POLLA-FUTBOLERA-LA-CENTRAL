@@ -133,22 +133,6 @@ with col2:
         label_visibility="collapsed"
     )
 
-# 🔵 Equipo 2
-with col2:
-    st.markdown(f"""
-    <div style='text-align:center;'>
-        <img src='https://flagcdn.com/w40/ar.png'><br>
-        <b>{equipo2}</b>
-    </div>
-    """, unsafe_allow_html=True)
-
-    goles2 = st.number_input(
-        "",
-        min_value=0,
-        max_value=20,
-        key="g2",
-        label_visibility="collapsed"
-    )
 
 if st.session_state.admin_visible:
     
