@@ -46,13 +46,11 @@ st.markdown(
 
 st.markdown("""
 <style>
-div[data-testid="stButton"] > button {
-    background-color: transparent;
-    color: transparent;
-    border: none;
-}
-div[data-testid="stButton"] > button:hover {
-    background-color: transparent;
+.admin-hidden button {
+    background-color: transparent !important;
+    color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 </style>
 """, unsafe_allow_html=True)
