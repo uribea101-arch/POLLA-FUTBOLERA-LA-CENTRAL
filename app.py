@@ -125,18 +125,32 @@ if st.session_state.admin_visible:
                 st.balloons()
 
 if st.button("Enviar"):
+
+    usuario = usuario.strip()
+    nombre = nombre.strip().title()
+
     if not usuario or not nombre:
         st.error("Debes completar todos los campos")
-    
-    elif not df.empty and usuario in df["usuario"].values:
-        st.warning("Ya registraste un marcador ❌")
-    
+
     else:
-        sheet.append_row([
-            usuario,
-            nombre,
-            goles1,
-            goles2,
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        ])
-        st.success("Marcador registrado ✅")
+        # 🔄 refrescar datos en tiempo real
+        data = sheet.get_all_records()
+        df = pd.DataFrame(data)
+
+        # 🧠 normalizar columna usuario
+        if not df.empty:
+            df["usuario"] = df["usuario"].astype(str).str.strip()
+
+        # 🔒 validar duplicado
+        if not df.empty and usuario in df["usuario"].values:
+            st.warning("Ya registraste un marcador ❌")
+
+        else:
+            sheet.append_row([
+                usuario,
+                nombre,
+                goles1,
+                goles2,
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            ])
+            st.success("Marcador registrado ✅")
