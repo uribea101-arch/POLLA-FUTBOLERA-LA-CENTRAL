@@ -22,15 +22,22 @@ sheet = client.open("Polla Futbolera").sheet1
 data = sheet.get_all_records()
 df = pd.DataFrame(data)
 
-# ⚽ Configuración del partido
-equipo1 = "Medellín"
-equipo2 = "Nacional"
-hora = "7:30 PM"
+# 📊 Leer configuración
+config_sheet = client.open("Polla Futbolera").worksheet("config")
+config_data = config_sheet.get_all_records()
+
+config = config_data[0]
+
+equipo1 = config["equipo1"]
+equipo2 = config["equipo2"]
+hora = config["hora"]
+descripcion = config["descripcion"]
+activo = config["activo"]
 
 st.title("⚽ Polla Futbolera")
 st.subheader(f"{equipo1} vs {equipo2}")
 st.write(f"🕒 {hora}")
-st.caption("Recuerda que solo es un marcador por cédula (SOLO PARA MAYORES DE EDAD).")
+st.caption(descripcion)
 
 # 🧾 Formulario
 usuario = st.text_input("Cédula")
@@ -38,14 +45,16 @@ goles1 = st.number_input(equipo1, min_value=0, max_value=20)
 goles2 = st.number_input(equipo2, min_value=0, max_value=20)
 
 if st.button("Enviar"):
-    if not usuario:
+    if not activo:
+        st.error("Las apuestas están cerradas ❌")
+    
+    elif not usuario:
         st.error("Debes ingresar un dato válido")
+    
     else:
-        # 🔒 Validar duplicado
         if not df.empty and usuario in df["usuario"].values:
             st.warning("Ya registraste un marcador ❌")
         else:
-            # 💾 Guardar en Sheets
             sheet.append_row([
                 usuario,
                 goles1,
