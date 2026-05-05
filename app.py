@@ -68,11 +68,13 @@ if st.session_state.admin_visible:
     st.divider()
     st.subheader("🔐 Panel Admin")
 
+    # 🔑 input SIEMPRE antes de usarlo
     admin_pass = st.text_input("Clave admin", type="password")
-#CLAVE ADMIN
+
+    # 🔐 leer secret de forma segura
     admin_secret = st.secrets.get("admin_password", "1234")
 
-if admin_pass == admin_secret:
+    if admin_pass == admin_secret:
 
         if st.button("🎡 Elegir ganador"):
             
