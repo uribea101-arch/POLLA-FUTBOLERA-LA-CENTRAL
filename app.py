@@ -64,7 +64,7 @@ st.markdown("""
 if "admin" in st.query_params:
     st.session_state.admin_visible = True
      
-st.subheader(f"{equipo1} vs {equipo2}")colA, colB, colC = st.columns([2,1,2])
+colA, colB, colC = st.columns([2,1,2])
 
 with colA:
     st.markdown(f"""
