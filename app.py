@@ -65,8 +65,26 @@ if "admin" in st.query_params:
     st.session_state.admin_visible = True
 
         
-st.subheader(f"{equipo1} vs {equipo2}")
-st.write(f"🕒 {hora}")
+st.subheader(f"{equipo1} vs {equipo2}")colA, colB, colC = st.columns([2,1,2])
+
+with colA:
+    st.markdown(f"""
+    <div style='text-align:center;'>
+        <img src='https://flagcdn.com/w80/co.png'><br>
+        <b>{equipo1}</b>
+    </div>
+    """, unsafe_allow_html=True)
+
+with colB:
+    st.markdown("<h2 style='text-align:center;'>VS</h2>", unsafe_allow_html=True)
+
+with colC:
+    st.markdown(f"""
+    <div style='text-align:center;'>
+        <img src='https://flagcdn.com/w80/ar.png'><br>
+        <b>{equipo2}</b>
+    </div>
+    """, unsafe_allow_html=True)st.write(f"🕒 {hora}")
 st.caption(descripcion)
 st.write(f"👥 Participantes: {len(df)}")
 
