@@ -52,8 +52,8 @@ st.markdown("""
        position: absolute;
        top: -10px;
        right: 0;
-       width: 120px;
-       height: 40px;
+       width: 40vw;
+       height: 60px;
        display: block;
        text-decoration: none;
        ">
@@ -96,7 +96,7 @@ if not activo:
 # 🧾 Formulario
 usuario = st.text_input("🪪Cédula")
 nombre = st.text_input("Nombre Completo (como en la cédula)")
-col1, col2 = st.columns(2)
+col1, col2 = st.columns(2, gap="small")
 
 # 🟡 Equipo 1
 with col1:
