@@ -44,10 +44,10 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-col1, col2, col3 = st.columns([10,1,1])
+col1, col2, col3 = st.columns([5,1,1])
 
 with col3:
-    if st.button("↓", help=""):
+    if st.button("⚽", help=""):
         st.session_state.admin_visible = True
         
 st.subheader(f"{equipo1} vs {equipo2}")
