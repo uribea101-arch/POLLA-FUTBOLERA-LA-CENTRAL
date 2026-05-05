@@ -72,7 +72,7 @@ if st.session_state.admin_visible:
     st.subheader("🔐 Panel Admin")
 
     admin_pass = st.text_input("Clave admin", type="password")
-    admin_secret = st.secrets.get("admin_password", "1234")
+    admin_secret = st.secrets.get("admin_password", "1469")
 
     if admin_pass == admin_secret:
 
