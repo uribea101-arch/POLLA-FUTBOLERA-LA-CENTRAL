@@ -40,11 +40,13 @@ resultado1 = config["resultado1"]
 resultado2 = config["resultado2"]
 
 st.title("⚽¡En La Central, el Mundial se vive mejor!")
+
 col1, col2, col3 = st.columns([10,1,1])
 
 with col3:
-    if st.button("."):
+    if st.button(" ", help=""):
         st.session_state.admin_visible = True
+        
 st.subheader(f"{equipo1} vs {equipo2}")
 st.write(f"🕒 {hora}")
 st.caption(descripcion)
