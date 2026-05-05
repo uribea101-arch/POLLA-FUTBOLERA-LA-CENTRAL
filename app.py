@@ -96,7 +96,6 @@ if not activo:
 # 🧾 Formulario
 usuario = st.text_input("🪪Cédula")
 nombre = st.text_input("Nombre Completo (como en la cédula)")
-
 col1, col2 = st.columns(2)
 
 # 🟡 Equipo 1
