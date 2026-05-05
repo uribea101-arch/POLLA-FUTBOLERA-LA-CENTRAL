@@ -139,19 +139,19 @@ if st.button("Enviar", use_container_width=True):
         df = pd.DataFrame(data)
 
         if not df.empty:
-            # 🧠 normalizar columna usuario
             usuarios_registrados = (
                 df["usuario"]
                 .astype(str)
                 .str.replace(".0", "", regex=False)
                 .str.replace(" ", "", regex=False)
                 .str.strip()
+                .tolist()  # 👈 clave aquí
             )
         else:
             usuarios_registrados = []
 
-        # 🔒 validar duplicado REAL
-        if usuario_limpio in usuarios_registrados.values:
+        # 🔒 validar duplicado
+        if usuario_limpio in usuarios_registrados:
             st.warning("Ya registraste un marcador ❌")
 
         else:
