@@ -57,10 +57,10 @@ div[data-testid="stButton"] > button:hover {
 </style>
 """, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([10,1,1])
+col1, col2 = st.columns([9,3])
 
-with col3:
-    if st.button("⚽", help=""):
+with col2:
+    if st.button("⚽", help="", use_container_width=True):
         st.session_state.admin_visible = True
         
 st.subheader(f"{equipo1} vs {equipo2}")
