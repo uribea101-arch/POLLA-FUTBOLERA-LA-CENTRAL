@@ -64,7 +64,7 @@ st.markdown("""
 if "admin" in st.query_params:
     st.session_state.admin_visible = True
      
-st.markdown(f"""
+st.markdown("""
 <div style='
     display:flex;
     justify-content:center;
@@ -76,7 +76,7 @@ st.markdown(f"""
 
     <div>
         <img src='https://flagcdn.com/w60/co.png'><br>
-        <b style="font-size:16px;">{equipo1}</b>
+        <b style="font-size:16px;">COLOMBIA</b>
     </div>
 
     <div style='font-size:18px; font-weight:bold;'>
@@ -85,7 +85,7 @@ st.markdown(f"""
 
     <div>
         <img src='https://flagcdn.com/w60/ar.png'><br>
-        <b style="font-size:16px;">{equipo2}</b>
+        <b style="font-size:16px;">ARGENTINA</b>
     </div>
 
 </div>
