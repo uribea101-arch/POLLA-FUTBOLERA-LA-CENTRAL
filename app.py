@@ -99,10 +99,13 @@ nombre = st.text_input("Nombre Completo (como en la cédula)")
 col1, col2 = st.columns(2)
 
 # 🟡 Equipo 1
+col1, col2 = st.columns(2)
+
+# 🟡 Equipo 1
 with col1:
     st.markdown(f"""
-    <div style='text-align:center;'>
-        <img src='https://flagcdn.com/w40/co.png'><br>
+    <div style='display:flex; align-items:center; justify-content:center; gap:8px;'>
+        <img src='https://flagcdn.com/w30/co.png'>
         <b>{equipo1}</b>
     </div>
     """, unsafe_allow_html=True)
@@ -112,6 +115,23 @@ with col1:
         min_value=0,
         max_value=20,
         key="g1",
+        label_visibility="collapsed"
+    )
+
+# 🔵 Equipo 2
+with col2:
+    st.markdown(f"""
+    <div style='display:flex; align-items:center; justify-content:center; gap:8px;'>
+        <img src='https://flagcdn.com/w30/ar.png'>
+        <b>{equipo2}</b>
+    </div>
+    """, unsafe_allow_html=True)
+
+    goles2 = st.number_input(
+        "",
+        min_value=0,
+        max_value=20,
+        key="g2",
         label_visibility="collapsed"
     )
 
