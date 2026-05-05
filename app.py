@@ -33,6 +33,8 @@ equipo2 = config["equipo2"]
 hora = config["hora"]
 descripcion = config["descripcion"]
 activo = config["activo"]
+resultado1 = config["resultado1"]
+resultado2 = config["resultado2"]
 
 st.title("⚽ Polla Futbolera")
 st.subheader(f"{equipo1} vs {equipo2}")
@@ -47,24 +49,49 @@ if not activo:
 
 # 🧾 Formulario
 usuario = st.text_input("Cédula")
+nombre = st.text_input("Nombre Completo (como en la cédula)")
 goles1 = st.number_input(equipo1, min_value=0, max_value=20)
 goles2 = st.number_input(equipo2, min_value=0, max_value=20)
 
+st.divider()
+st.subheader("🔐 Panel Admin")
+
+admin_pass = st.text_input("Clave admin", type="password")
+if admin_pass == "1234":  # puedes cambiar esta clave
+    if st.button("🎡 Elegir ganador"):
+        
+        # Filtrar ganadores
+        df_ganadores = df[
+            (df["equipo1"] == resultado1) &
+            (df["equipo2"] == resultado2)
+        ]
+
+        if df_ganadores.empty:
+            st.error("Nadie acertó el marcador 😢")
+        else:
+            import random
+            
+            fila_ganadora = df_ganadores.sample().iloc[0]
+
+            nombre_ganador = fila_ganadora["nombre"]
+            cedula_ganador = fila_ganadora["usuario"]
+            
+            st.success(f"🏆 Ganador: {nombre_ganador}")
+            st.write(f"🪪 Cédula: {cedula_ganador}")
+
 if st.button("Enviar"):
-    if not activo:
-        st.error("Las apuestas están cerradas ❌")
+    if not usuario or not nombre:
+        st.error("Debes completar todos los campos")
     
-    elif not usuario:
-        st.error("Debes ingresar un dato válido")
+    elif not df.empty and usuario in df["usuario"].values:
+        st.warning("Ya registraste un marcador ❌")
     
     else:
-        if not df.empty and usuario in df["usuario"].values:
-            st.warning("Ya registraste un marcador ❌")
-        else:
-            sheet.append_row([
-                usuario,
-                goles1,
-                goles2,
-                datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            ])
-            st.success("Marcador registrado ✅")
+        sheet.append_row([
+            usuario,
+            nombre,
+            goles1,
+            goles2,
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ])
+        st.success("Marcador registrado ✅")
