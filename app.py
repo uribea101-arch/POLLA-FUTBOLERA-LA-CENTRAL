@@ -52,7 +52,7 @@ st.markdown("""
        position: absolute;
        top: -10px;
        right: 0;
-       width: 40vw;
+       width: min(200px, 40vw);
        height: 60px;
        display: block;
        text-decoration: none;
