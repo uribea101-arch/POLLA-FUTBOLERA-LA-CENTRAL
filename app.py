@@ -43,8 +43,20 @@ st.markdown(
     "<h1 style='text-align: center;'>⚽ ¡En La Central, el Mundial se vive mejor!</h1>",
     unsafe_allow_html=True
 )
+st.markdown("""
+<style>
+div[data-testid="stButton"] > button {
+    background-color: transparent;
+    color: transparent;
+    border: none;
+}
+div[data-testid="stButton"] > button:hover {
+    background-color: transparent;
+}
+</style>
+""", unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([5,1,1])
+col1, col2, col3 = st.columns([10,1,1])
 
 with col3:
     if st.button("⚽", help=""):
