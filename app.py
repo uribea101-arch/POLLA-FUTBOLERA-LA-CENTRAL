@@ -45,12 +45,24 @@ st.markdown(
 )
 
 
-col1, col2 = st.columns([8,4])
+st.markdown("""
+<div style="position: relative; height: 0px;">
+    <a href="?admin=true" 
+       style="
+       position: absolute;
+       top: -10px;
+       right: 0;
+       width: 120px;
+       height: 40px;
+       display: block;
+       text-decoration: none;
+       ">
+    </a>
+</div>
+""", unsafe_allow_html=True)
 
-with col2:
-    
-    if st.button("ADMIN", use_container_width=True):
-        st.session_state.admin_visible = True
+if "admin" in st.query_params:
+    st.session_state.admin_visible = True
 
         
 st.subheader(f"{equipo1} vs {equipo2}")
