@@ -96,8 +96,41 @@ if not activo:
 # 🧾 Formulario
 usuario = st.text_input("🪪Cédula")
 nombre = st.text_input("Nombre Completo (como en la cédula)")
-goles1 = st.number_input(equipo1, min_value=0, max_value=20)
-goles2 = st.number_input(equipo2, min_value=0, max_value=20)
+col1, col2 = st.columns(2)
+
+# 🟡 Equipo 1
+with col1:
+    st.markdown(f"""
+    <div style='text-align:center;'>
+        <img src='https://flagcdn.com/w40/co.png'><br>
+        <b>{equipo1}</b>
+    </div>
+    """, unsafe_allow_html=True)
+
+    goles1 = st.number_input(
+        "",
+        min_value=0,
+        max_value=20,
+        key="g1",
+        label_visibility="collapsed"
+    )
+
+# 🔵 Equipo 2
+with col2:
+    st.markdown(f"""
+    <div style='text-align:center;'>
+        <img src='https://flagcdn.com/w40/ar.png'><br>
+        <b>{equipo2}</b>
+    </div>
+    """, unsafe_allow_html=True)
+
+    goles2 = st.number_input(
+        "",
+        min_value=0,
+        max_value=20,
+        key="g2",
+        label_visibility="collapsed"
+    )
 
 if st.session_state.admin_visible:
     
