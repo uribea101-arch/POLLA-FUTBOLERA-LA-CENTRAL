@@ -64,32 +64,29 @@ st.markdown("""
 if "admin" in st.query_params:
     st.session_state.admin_visible = True
      
-st.markdown("""
-<div style='
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:16px;
-    flex-wrap:nowrap;
-    text-align:center;
-'>
+colA, colB, colC = st.columns([2,1,2])
 
-    <div>
-        <img src='https://flagcdn.com/w60/co.png'><br>
-        <b style="font-size:16px;">COLOMBIA</b>
+with colA:
+    st.markdown(f"""
+    <div style='text-align:center;'>
+        <img src='https://flagcdn.com/w80/co.png'><br>
+        <b>{equipo1}</b>
     </div>
+    """, unsafe_allow_html=True)
 
-    <div style='font-size:18px; font-weight:bold;'>
-        VS
+with colB:
+    st.markdown(
+        "<h2 style='text-align:center;'>VS</h2>",
+        unsafe_allow_html=True
+    )
+
+with colC:
+    st.markdown(f"""
+    <div style='text-align:center;'>
+        <img src='https://flagcdn.com/w80/ar.png'><br>
+        <b>{equipo2}</b>
     </div>
-
-    <div>
-        <img src='https://flagcdn.com/w60/ar.png'><br>
-        <b style="font-size:16px;">ARGENTINA</b>
-    </div>
-
-</div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 st.write(f"🕒 {hora}")
 st.caption(descripcion)
 st.write(f"👥 Participantes: {len(df)}")
