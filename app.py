@@ -126,29 +126,38 @@ if st.session_state.admin_visible:
 
 if st.button("Enviar", use_container_width=True):
 
-    usuario = usuario.strip()
-    nombre = nombre.strip().title()
+    # 🧹 limpiar datos ingresados
+    usuario_limpio = ''.join(filter(str.isdigit, str(usuario)))
+    nombre_limpio = nombre.strip().title()
 
-    if not usuario or not nombre:
+    if not usuario_limpio or not nombre_limpio:
         st.error("Debes completar todos los campos")
 
     else:
-        # 🔄 refrescar datos en tiempo real
+        # 🔄 refrescar datos desde Google Sheets
         data = sheet.get_all_records()
         df = pd.DataFrame(data)
 
-        # 🧠 normalizar columna usuario
         if not df.empty:
-            df["usuario"] = df["usuario"].astype(str).str.strip()
+            # 🧠 normalizar columna usuario
+            usuarios_registrados = (
+                df["usuario"]
+                .astype(str)
+                .str.replace(".0", "", regex=False)
+                .str.replace(" ", "", regex=False)
+                .str.strip()
+            )
+        else:
+            usuarios_registrados = []
 
-        # 🔒 validar duplicado
-        if not df.empty and usuario in df["usuario"].values:
+        # 🔒 validar duplicado REAL
+        if usuario_limpio in usuarios_registrados.values:
             st.warning("Ya registraste un marcador ❌")
 
         else:
             sheet.append_row([
-                usuario,
-                nombre,
+                usuario_limpio,
+                nombre_limpio,
                 goles1,
                 goles2,
                 datetime.now().strftime("%Y-%m-%d %H:%M:%S")
