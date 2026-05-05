@@ -55,11 +55,15 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-col1, col2 = st.columns([9,3])
+col1, col2 = st.columns([8,4])
 
 with col2:
-    if st.button("⚽", help="", use_container_width=True):
+    st.markdown('<div class="admin-hidden">', unsafe_allow_html=True)
+    
+    if st.button("ADMIN", use_container_width=True):
         st.session_state.admin_visible = True
+
+    st.markdown('</div>', unsafe_allow_html=True)
         
 st.subheader(f"{equipo1} vs {equipo2}")
 st.write(f"🕒 {hora}")
