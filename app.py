@@ -46,24 +46,15 @@ st.markdown(
 
 st.markdown("""
 <style>
-.admin-btn {
-    position: absolute;
-    top: 35px;      /* ajusta si lo quieres más arriba/abajo */
-    right: 20px;    /* pegado a la derecha del título */
-    width: 25px;
-    height: 25px;
+div[data-testid="stButton"] > button {
     background-color: transparent;
+    color: transparent;
     border: none;
-    cursor: pointer;
+}
+div[data-testid="stButton"] > button:hover {
+    background-color: transparent;
 }
 </style>
-
-<div style="position: relative;">
-    <h1 style='text-align: center;'>⚽ ¡En La Central, el Mundial se vive mejor!</h1>
-    <form action="" method="get">
-        <button name="admin" value="1" class="admin-btn"></button>
-    </form>
-</div>
 """, unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([10,1,1])
