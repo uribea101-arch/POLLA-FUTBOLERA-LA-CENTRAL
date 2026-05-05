@@ -117,7 +117,7 @@ if st.session_state.admin_visible:
                     f"""
                     <h1 style='text-align:center; color:green;'>🏆 GANADOR 🏆</h1>
                     <h2 style='text-align:center;'>{nombre_ganador}</h2>
-                    <h3 style='text-align:center;'>Cédula: {cedula_ganador}</h3>
+                    <h3 style='text-align:center;'>🪪Cédula: {cedula_ganador}</h3>
                     """,
                     unsafe_allow_html=True
                 )
