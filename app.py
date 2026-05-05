@@ -4,6 +4,9 @@ from google.oauth2.service_account import Credentials
 import pandas as pd
 from datetime import datetime
 
+if "admin_visible" not in st.session_state:
+    st.session_state.admin_visible = False
+
 # 🔐 Conexión con Google Sheets
 scope = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -36,7 +39,7 @@ activo = config["activo"]
 resultado1 = config["resultado1"]
 resultado2 = config["resultado2"]
 
-st.title("⚽ Polla Futbolera")
+st.title("⚽ En La Central, el Mundial se vive mejor")
 st.subheader(f"{equipo1} vs {equipo2}")
 st.write(f"🕒 {hora}")
 st.caption(descripcion)
