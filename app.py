@@ -122,7 +122,7 @@ with col1:
 with col2:
     st.markdown(f"""
     <div style='text-align:center;'>
-        <img src='https://flagcdn.com/w40/ar.png'><br>
+        <img src='https://flagcdn.com/w40/pt.png'><br>
         <b>{equipo2}</b>
     </div>
     """, unsafe_allow_html=True)
