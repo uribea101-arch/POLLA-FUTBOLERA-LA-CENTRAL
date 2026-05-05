@@ -35,7 +35,7 @@ equipo1 = config["equipo1"]
 equipo2 = config["equipo2"]
 hora = config["hora"]
 descripcion = config["descripcion"]
-activo = config["activo"]
+activo = str(config["activo"]).strip().lower() == "true"
 resultado1 = config["resultado1"]
 resultado2 = config["resultado2"]
 
