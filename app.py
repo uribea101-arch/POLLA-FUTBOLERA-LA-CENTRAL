@@ -68,7 +68,7 @@ if st.session_state.admin_visible:
 
     admin_pass = st.text_input("Clave admin", type="password")
 
-    if admin_pass == st.secrets["admin_password"]:
+    if admin_pass == "1469":
 
         if st.button("🎡 Elegir ganador"):
             
