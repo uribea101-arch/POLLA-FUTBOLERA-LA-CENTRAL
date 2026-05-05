@@ -38,6 +38,12 @@ st.title("⚽ Polla Futbolera")
 st.subheader(f"{equipo1} vs {equipo2}")
 st.write(f"🕒 {hora}")
 st.caption(descripcion)
+st.write(f"👥 Participantes: {len(df)}")
+
+# 🔒 BLOQUEO TOTAL
+if not activo:
+    st.warning("Las apuestas están cerradas ❌")
+    st.stop()
 
 # 🧾 Formulario
 usuario = st.text_input("Cédula")
