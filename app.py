@@ -30,10 +30,10 @@ hora = "7:30 PM"
 st.title("⚽ Polla Futbolera")
 st.subheader(f"{equipo1} vs {equipo2}")
 st.write(f"🕒 {hora}")
-st.caption("Recuerda que solo es un marcador por cédula.")
+st.caption("Recuerda que solo es un marcador por cédula (SOLOP PARA MAYORES DE EDAD).")
 
 # 🧾 Formulario
-usuario = st.text_input("Correo o cédula")
+usuario = st.text_input("Cédula")
 goles1 = st.number_input(equipo1, min_value=0, max_value=20)
 goles2 = st.number_input(equipo2, min_value=0, max_value=20)
 
