@@ -98,7 +98,6 @@ usuario = st.text_input("🪪Cédula")
 nombre = st.text_input("Nombre Completo (como en la cédula)")
 col1, col2 = st.columns(2)
 
-# 🟡 Equipo 1
 col1, col2 = st.columns(2)
 
 # 🟡 Equipo 1
@@ -114,7 +113,7 @@ with col1:
         "",
         min_value=0,
         max_value=20,
-        key="g1",
+        key="goles_local",  # 🔥 clave única
         label_visibility="collapsed"
     )
 
@@ -131,7 +130,7 @@ with col2:
         "",
         min_value=0,
         max_value=20,
-        key="g2",
+        key="goles_visitante",  # 🔥 clave única
         label_visibility="collapsed"
     )
 
