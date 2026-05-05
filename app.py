@@ -94,7 +94,7 @@ if not activo:
     st.stop()
 
 # 🧾 Formulario
-usuario = st.text_input("Cédula")
+usuario = st.text_input("🪪Cédula")
 nombre = st.text_input("Nombre Completo (como en la cédula)")
 goles1 = st.number_input(equipo1, min_value=0, max_value=20)
 goles2 = st.number_input(equipo2, min_value=0, max_value=20)
