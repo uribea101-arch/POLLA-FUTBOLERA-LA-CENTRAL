@@ -124,7 +124,7 @@ if st.session_state.admin_visible:
 
                 st.balloons()
 
-if st.button("Enviar"):
+if st.button("Enviar", use_container_width=True):
 
     usuario = usuario.strip()
     nombre = nombre.strip().title()
