@@ -47,7 +47,7 @@ st.markdown(
 col1, col2, col3 = st.columns([10,1,1])
 
 with col3:
-    if st.button("Anota tu marcador", help=""):
+    if st.button("↓", help=""):
         st.session_state.admin_visible = True
         
 st.subheader(f"{equipo1} vs {equipo2}")
