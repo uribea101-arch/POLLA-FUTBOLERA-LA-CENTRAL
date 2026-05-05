@@ -76,63 +76,63 @@ if st.session_state.admin_visible:
 
     if admin_pass == admin_secret:
 
-if st.button("🎡 Elegir ganador"):
-    
-    import random
-    import time
+        if st.button("🎡 Elegir ganador"):
+            
+            import random
+            import time
 
-    # 🛑 validar si ya hay resultado
-    if str(resultado1).strip() == "" or str(resultado2).strip() == "":
-        st.warning("⏳ Aún no se ha definido el resultado del partido")
-        st.stop()
+            # 🛑 validar si ya hay resultado
+            if str(resultado1).strip() == "" or str(resultado2).strip() == "":
+                st.warning("⏳ Aún no se ha definido el resultado del partido")
+                st.stop()
 
-    # ✅ limpiar y convertir resultado
-    resultado1_int = int(str(resultado1).strip().replace(".0", ""))
-    resultado2_int = int(str(resultado2).strip().replace(".0", ""))
+            # ✅ limpiar y convertir resultado
+            resultado1_int = int(str(resultado1).strip().replace(".0", ""))
+            resultado2_int = int(str(resultado2).strip().replace(".0", ""))
 
-    # 🧠 asegurar tipos correctos en dataframe
-    df["equipo1"] = df["equipo1"].astype(int)
-    df["equipo2"] = df["equipo2"].astype(int)
+            # 🧠 asegurar tipos correctos
+            df["equipo1"] = df["equipo1"].astype(int)
+            df["equipo2"] = df["equipo2"].astype(int)
 
-    # 🎯 filtrar ganadores
-    df_ganadores = df[
-        (df["equipo1"] == resultado1_int) &
-        (df["equipo2"] == resultado2_int)
-    ]
+            # 🎯 filtrar ganadores
+            df_ganadores = df[
+                (df["equipo1"] == resultado1_int) &
+                (df["equipo2"] == resultado2_int)
+            ]
 
-    if df_ganadores.empty:
-        st.error("Nadie acertó el marcador 😢")
-    else:
-        st.success(f"🎯 {len(df_ganadores)} personas acertaron!")
+            if df_ganadores.empty:
+                st.error("Nadie acertó el marcador 😢")
+            else:
+                st.success(f"🎯 {len(df_ganadores)} personas acertaron!")
 
-        nombres = df_ganadores["nombre"].tolist()
-        placeholder = st.empty()
+                nombres = df_ganadores["nombre"].tolist()
+                placeholder = st.empty()
 
-        # 🎡 animación tipo ruleta
-        for i in range(20):
-            nombre_random = random.choice(nombres)
-            placeholder.markdown(
-                f"<h2 style='text-align:center;'>🎡 {nombre_random}</h2>",
-                unsafe_allow_html=True
-            )
-            time.sleep(0.1 + i * 0.02)
+                # 🎡 animación
+                for i in range(20):
+                    nombre_random = random.choice(nombres)
+                    placeholder.markdown(
+                        f"<h2 style='text-align:center;'>🎡 {nombre_random}</h2>",
+                        unsafe_allow_html=True
+                    )
+                    time.sleep(0.1 + i * 0.02)
 
-        # 🏆 ganador final
-        fila_ganadora = df_ganadores.sample().iloc[0]
+                # 🏆 ganador final
+                fila_ganadora = df_ganadores.sample().iloc[0]
 
-        nombre_ganador = fila_ganadora["nombre"]
-        cedula_ganador = fila_ganadora["usuario"]
+                nombre_ganador = fila_ganadora["nombre"]
+                cedula_ganador = fila_ganadora["usuario"]
 
-        placeholder.markdown(
-            f"""
-            <h1 style='text-align:center; color:green;'>🏆 GANADOR 🏆</h1>
-            <h2 style='text-align:center;'>{nombre_ganador}</h2>
-            <h3 style='text-align:center;'>Cédula: {cedula_ganador}</h3>
-            """,
-            unsafe_allow_html=True
-        )
+                placeholder.markdown(
+                    f"""
+                    <h1 style='text-align:center; color:green;'>🏆 GANADOR 🏆</h1>
+                    <h2 style='text-align:center;'>{nombre_ganador}</h2>
+                    <h3 style='text-align:center;'>🪪Cédula: {cedula_ganador}</h3>
+                    """,
+                    unsafe_allow_html=True
+                )
 
-        st.balloons()
+                st.balloons()
 if st.button("Enviar", use_container_width=True):
 
     # 🧹 limpiar datos
