@@ -57,7 +57,7 @@ st.divider()
 st.subheader("🔐 Panel Admin")
 
 admin_pass = st.text_input("Clave admin", type="password")
-if admin_pass == "1234":  # puedes cambiar esta clave
+if admin_pass == "1469":  # puedes cambiar esta clave
     if st.button("🎡 Elegir ganador"):
         
         # Filtrar ganadores
