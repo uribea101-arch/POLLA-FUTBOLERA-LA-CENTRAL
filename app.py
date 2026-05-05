@@ -44,26 +44,14 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown("""
-<style>
-.admin-hidden button {
-    background-color: transparent !important;
-    color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-</style>
-""", unsafe_allow_html=True)
 
 col1, col2 = st.columns([8,4])
 
 with col2:
-    st.markdown('<div class="admin-hidden">', unsafe_allow_html=True)
     
     if st.button("ADMIN", use_container_width=True):
         st.session_state.admin_visible = True
 
-    st.markdown('</div>', unsafe_allow_html=True)
         
 st.subheader(f"{equipo1} vs {equipo2}")
 st.write(f"🕒 {hora}")
