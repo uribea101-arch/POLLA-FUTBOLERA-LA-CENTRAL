@@ -63,8 +63,7 @@ st.markdown("""
 
 if "admin" in st.query_params:
     st.session_state.admin_visible = True
-
-        
+     
 st.subheader(f"{equipo1} vs {equipo2}")colA, colB, colC = st.columns([2,1,2])
 
 with colA:
@@ -84,7 +83,8 @@ with colC:
         <img src='https://flagcdn.com/w80/ar.png'><br>
         <b>{equipo2}</b>
     </div>
-    """, unsafe_allow_html=True)st.write(f"🕒 {hora}")
+    """, unsafe_allow_html=True)
+st.write(f"🕒 {hora}")
 st.caption(descripcion)
 st.write(f"👥 Participantes: {len(df)}")
 
