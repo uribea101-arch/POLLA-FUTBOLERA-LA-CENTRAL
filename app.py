@@ -61,7 +61,6 @@ nombre = st.text_input("Nombre Completo (como en la cédula)")
 goles1 = st.number_input(equipo1, min_value=0, max_value=20)
 goles2 = st.number_input(equipo2, min_value=0, max_value=20)
 
-st.divider()
 if st.session_state.admin_visible:
     
     st.divider()
