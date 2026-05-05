@@ -79,7 +79,7 @@ if st.session_state.admin_visible:
 
     if admin_pass == admin_secret:
 
-        if st.button("🎡 Elegir ganador"):
+if st.button("🎡 Elegir ganador"):
     
     import random
     import time
