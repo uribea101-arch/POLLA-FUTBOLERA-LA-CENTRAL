@@ -1,11 +1,11 @@
 import streamlit as st
+if "admin_visible" not in st.session_state:
+    st.session_state.admin_visible = False
 import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
 from datetime import datetime
 
-if "admin_visible" not in st.session_state:
-    st.session_state.admin_visible = False
 
 # 🔐 Conexión con Google Sheets
 scope = [
@@ -43,7 +43,7 @@ st.title("⚽¡En La Central, el Mundial se vive mejor!")
 col1, col2, col3 = st.columns([10,1,1])
 
 with col3:
-    if st.button("⚙️"):
+    if st.button("."):
         st.session_state.admin_visible = True
 st.subheader(f"{equipo1} vs {equipo2}")
 st.write(f"🕒 {hora}")
@@ -62,30 +62,38 @@ goles1 = st.number_input(equipo1, min_value=0, max_value=20)
 goles2 = st.number_input(equipo2, min_value=0, max_value=20)
 
 st.divider()
-st.subheader("🔐 Panel Admin")
+if st.session_state.admin_visible:
+    
+    st.divider()
+    st.subheader("🔐 Panel Admin")
 
-admin_pass = st.text_input("Clave admin", type="password")
-if admin_pass == "1469":  # puedes cambiar esta clave
-    if st.button("🎡 Elegir ganador"):
-        
-        # Filtrar ganadores
-        df_ganadores = df[
-            (df["equipo1"] == resultado1) &
-            (df["equipo2"] == resultado2)
-        ]
+    admin_pass = st.text_input("Clave admin", type="password")
 
-        if df_ganadores.empty:
-            st.error("Nadie acertó el marcador 😢")
-        else:
-            import random
+    if admin_pass == st.secrets["admin_password"]:
+
+        if st.button("🎡 Elegir ganador"):
             
-            fila_ganadora = df_ganadores.sample().iloc[0]
+            df["equipo1"] = df["equipo1"].astype(int)
+            df["equipo2"] = df["equipo2"].astype(int)
 
-            nombre_ganador = fila_ganadora["nombre"]
-            cedula_ganador = fila_ganadora["usuario"]
-            
-            st.success(f"🏆 Ganador: {nombre_ganador}")
-            st.write(f"🪪 Cédula: {cedula_ganador}")
+            resultado1_int = int(resultado1)
+            resultado2_int = int(resultado2)
+
+            df_ganadores = df[
+                (df["equipo1"] == resultado1_int) &
+                (df["equipo2"] == resultado2_int)
+            ]
+
+            if df_ganadores.empty:
+                st.error("Nadie acertó el marcador 😢")
+            else:
+                fila_ganadora = df_ganadores.sample().iloc[0]
+
+                nombre_ganador = fila_ganadora["nombre"]
+                cedula_ganador = fila_ganadora["usuario"]
+
+                st.success(f"🏆 Ganador: {nombre_ganador}")
+                st.write(f"🪪 Cédula: {cedula_ganador}")
 
 if st.button("Enviar"):
     if not usuario or not nombre:
