@@ -72,7 +72,7 @@ if st.session_state.admin_visible:
     admin_pass = st.text_input("Clave admin", type="password")
 
     # 🔐 leer secret de forma segura
-    admin_secret = st.secrets.get("admin_password", "1234")
+    admin_secret = st.secrets.get("admin_password", "1469")
 
     if admin_pass == admin_secret:
 
