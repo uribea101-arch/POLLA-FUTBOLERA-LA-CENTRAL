@@ -126,15 +126,24 @@ if st.session_state.admin_visible:
 
 if st.button("Enviar", use_container_width=True):
 
-    # 🧹 limpiar datos ingresados
-    usuario_limpio = ''.join(filter(str.isdigit, str(usuario)))
-    nombre_limpio = nombre.strip().title()
+    # 🧹 limpiar datos
+    usuario_original = str(usuario)
+    nombre_original = str(nombre)
 
-    if not usuario_limpio or not nombre_limpio:
+    usuario_limpio = ''.join(filter(str.isdigit, usuario_original))
+    nombre_limpio = nombre_original.strip()
+
+    # 🔍 debug visual (puedes quitarlo luego)
+    # st.write(f"DEBUG usuario: '{usuario_limpio}'")
+    # st.write(f"DEBUG nombre: '{nombre_limpio}'")
+
+    if usuario_limpio == "" or nombre_limpio == "":
         st.error("Debes completar todos los campos")
 
     else:
-        # 🔄 refrescar datos desde Google Sheets
+        nombre_limpio = nombre_limpio.title()
+
+        # 🔄 refrescar datos
         data = sheet.get_all_records()
         df = pd.DataFrame(data)
 
@@ -145,12 +154,11 @@ if st.button("Enviar", use_container_width=True):
                 .str.replace(".0", "", regex=False)
                 .str.replace(" ", "", regex=False)
                 .str.strip()
-                .tolist()  # 👈 clave aquí
+                .tolist()
             )
         else:
             usuarios_registrados = []
 
-        # 🔒 validar duplicado
         if usuario_limpio in usuarios_registrados:
             st.warning("Ya registraste un marcador ❌")
 
