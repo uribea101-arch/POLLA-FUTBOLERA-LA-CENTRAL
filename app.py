@@ -105,7 +105,7 @@ col1, col2 = st.columns(2, gap="small")
 with col1:
     st.markdown(f"""
     <div style='text-align:center;'>
-        <img src='https://flagcdn.com/w35/co.png'><br>
+        <img src='https://flagcdn.com/w40/co.png'><br>
         <b>{equipo1}</b>
     </div>
     """, unsafe_allow_html=True)
@@ -122,7 +122,7 @@ with col1:
 with col2:
     st.markdown(f"""
     <div style='text-align:center;'>
-        <img src='https://flagcdn.com/w35/pt.png'><br>
+        <img src='https://flagcdn.com/w40/pt.png'><br>
         <b>{equipo2}</b>
     </div>
     """, unsafe_allow_html=True)
