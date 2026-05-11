@@ -40,7 +40,7 @@ resultado1 = config["resultado1"]
 resultado2 = config["resultado2"]
 
 st.markdown(
-    "<h1 style='text-align: center;'>¡En La Central, el Mundial se vive mejor!</h1>",
+    "<h1 style='text-align: center;'>¡En La Central, el Mundial se vive mejor!⚽</h1>",
     unsafe_allow_html=True
 )
 
@@ -113,7 +113,7 @@ with col1:
     goles1 = st.number_input(
         "",
         min_value=0,
-        max_value=20,
+        max_value=6,
         key="g1",
         label_visibility="collapsed"
     )
@@ -130,7 +130,7 @@ with col2:
     goles2 = st.number_input(
         "",
         min_value=0,
-        max_value=20,
+        max_value=6,
         key="g2",
         label_visibility="collapsed"
     )
