@@ -113,7 +113,7 @@ with col1:
     goles1 = st.number_input(
         "",
         min_value=0,
-        max_value=6,
+        max_value=10,
         key="g1",
         label_visibility="collapsed"
     )
@@ -130,7 +130,7 @@ with col2:
     goles2 = st.number_input(
         "",
         min_value=0,
-        max_value=6,
+        max_value=10,
         key="g2",
         label_visibility="collapsed"
     )
@@ -184,7 +184,7 @@ if st.session_state.admin_visible:
                         f"<h2 style='text-align:center;'>🎡 {nombre_random}</h2>",
                         unsafe_allow_html=True
                     )
-                    time.sleep(0.1 + i * 0.02)
+                    time.sleep(0.5 + i * 0.02)
 
                 # 🏆 ganador final
                 fila_ganadora = df_ganadores.sample().iloc[0]
