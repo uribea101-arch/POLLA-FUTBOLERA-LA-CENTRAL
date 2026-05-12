@@ -69,7 +69,7 @@ colA, colB, colC = st.columns([2,1,2])
 with colA:
     st.markdown(f"""
     <div style='text-align:center;'>
-        <img src='https://flagcdn.com/w80/co.png'><br>
+        <img src='https://flagcdn.com/w80/uz.png'><br>
         <b>{equipo1}</b>
     </div>
     """, unsafe_allow_html=True)
