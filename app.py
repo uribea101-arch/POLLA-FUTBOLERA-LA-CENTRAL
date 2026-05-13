@@ -53,6 +53,16 @@ activo = config.get("activo", False)
 resultado1 = config.get("resultado1", 0)
 resultado2 = config.get("resultado2", 0)
 
+bandera1 = config.get(
+    "bandera1",
+    "https://flagcdn.com/w80/uz.png"
+)
+
+bandera2 = config.get(
+    "bandera2",
+    "https://flagcdn.com/w80/co.png"
+)
+
 # =========================
 # 📊 APUESTAS
 # =========================
@@ -106,7 +116,7 @@ colA, colB, colC = st.columns([2,1,2])
 with colA:
     st.markdown(f"""
     <div style='text-align:center;'>
-        <img src='https://flagcdn.com/w80/uz.png'><br>
+        <img src='{bandera1}' width='80'><br>
         <b>{equipo1}</b>
     </div>
     """, unsafe_allow_html=True)
@@ -120,7 +130,7 @@ with colB:
 with colC:
     st.markdown(f"""
     <div style='text-align:center;'>
-        <img src='https://flagcdn.com/w80/co.png'><br>
+        <img src='{bandera2}' width='80'><br>
         <b>{equipo2}</b>
     </div>
     """, unsafe_allow_html=True)
@@ -149,7 +159,7 @@ with col1:
 
     st.markdown(f"""
     <div style='text-align:center;'>
-        <img src='https://flagcdn.com/w40/uz.png'><br>
+        <img src='{bandera1}' width='40'><br>
         <b>{equipo1}</b>
     </div>
     """, unsafe_allow_html=True)
@@ -167,7 +177,7 @@ with col2:
 
     st.markdown(f"""
     <div style='text-align:center;'>
-        <img src='https://flagcdn.com/w40/co.png'><br>
+        <img src='{bandera2}' width='40'><br>
         <b>{equipo2}</b>
     </div>
     """, unsafe_allow_html=True)
@@ -192,6 +202,107 @@ if st.session_state.admin_visible:
     admin_secret = st.secrets.get("admin_password", "1469")
 
     if admin_pass == admin_secret:
+
+                st.divider()
+        st.subheader("⚙️ Configuración Evento")
+
+        nuevo_equipo1 = st.text_input(
+            "Equipo 1",
+            value=equipo1
+        )
+
+        nuevo_equipo2 = st.text_input(
+            "Equipo 2",
+            value=equipo2
+        )
+
+        nueva_bandera1 = st.text_input(
+            "URL bandera/escudo equipo 1",
+            value=bandera1
+        )
+
+        nueva_bandera2 = st.text_input(
+            "URL bandera/escudo equipo 2",
+            value=bandera2
+        )
+
+        nueva_hora = st.text_input(
+            "Hora",
+            value=hora
+        )
+
+        nueva_descripcion = st.text_area(
+            "Descripción",
+            value=descripcion
+        )
+
+        nuevo_resultado1 = st.number_input(
+            "Resultado equipo 1",
+            min_value=0,
+            max_value=20,
+            value=int(resultado1)
+        )
+
+        nuevo_resultado2 = st.number_input(
+            "Resultado equipo 2",
+            min_value=0,
+            max_value=20,
+            value=int(resultado2)
+        )
+
+        nuevo_estado = st.toggle(
+            "🟢 Apuestas activas",
+            value=activo
+        )
+
+        # 💾 guardar config
+        if st.button("💾 Guardar configuración"):
+
+            try:
+
+                db.collection("config").document("partido_actual").set({
+
+                    "equipo1": nuevo_equipo1,
+                    "equipo2": nuevo_equipo2,
+
+                    "bandera1": nueva_bandera1,
+                    "bandera2": nueva_bandera2,
+
+                    "hora": nueva_hora,
+                    "descripcion": nueva_descripcion,
+
+                    "resultado1": int(nuevo_resultado1),
+                    "resultado2": int(nuevo_resultado2),
+
+                    "activo": nuevo_estado
+                })
+
+                cargar_config.clear()
+
+                st.success("✅ Configuración actualizada")
+
+            except Exception as e:
+
+                st.error(e)
+
+        # 🗑️ reiniciar participantes
+        if st.button("🗑️ Reiniciar participantes"):
+
+            try:
+
+                docs = db.collection("apuestas").stream()
+
+                for doc in docs:
+
+                    doc.reference.delete()
+
+                cargar_apuestas.clear()
+
+                st.success("✅ Participantes eliminados")
+
+            except Exception as e:
+
+                st.error(e)
 
         if st.button("🎡 Elegir ganador"):
 
