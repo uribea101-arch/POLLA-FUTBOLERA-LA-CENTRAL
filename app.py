@@ -33,7 +33,7 @@ sheet = hojas["info"]
 config_sheet = hojas["config"]
 
 # 📊 Funciones de carga con sistema de reintentos
-@st.cache_data(ttl=60) # Subimos a 60 segundos para evitar bloqueos
+@st.cache_data(ttl=300) # Subimos a 60 segundos para evitar bloqueos
 def cargar_datos_seguro():
     for i in range(3):
         try:
@@ -42,7 +42,7 @@ def cargar_datos_seguro():
             time.sleep(2)
     return []
 
-@st.cache_data(ttl=60)
+@st.cache_data(ttl=300)
 def cargar_config_seguro():
     for i in range(3):
         try:
