@@ -23,42 +23,27 @@ def conectar_firestore():
 
 db = conectar_firestore()
 
-# 📊 Funciones de carga con sistema de reintentos
-@st.cache_data(ttl=300) # Subimos a 60 segundos para evitar bloqueos
-def cargar_datos_seguro():
-    for i in range(3):
-        try:
-            return sheet.get_all_records()
-        except APIError:
-            time.sleep(2)
-    return []
+# 🔥 Leer configuración desde Firestore
+@st.cache_data(ttl=10)
+def cargar_config():
 
-@st.cache_data(ttl=300)
-def cargar_config_seguro():
-    for i in range(3):
-        try:
-            return config_sheet.get_all_records()[0]
-        except APIError:
-            time.sleep(2)
+    doc = db.collection("config").document("partido_actual").get()
+
+    if doc.exists:
+        return doc.to_dict()
+
     return {}
 
-# 🛠️ Carga inicial de datos
-try:
-    data = cargar_datos_seguro()
-    df = pd.DataFrame(data)
-    config = cargar_config_seguro()
-except Exception as e:
-    st.error("⚠️ Google Sheets está saturado. Por favor, refresca la página en 10 segundos.")
-    st.stop()
+config = cargar_config()
 
 # 📝 Variables de configuración
 equipo1 = config.get("equipo1", "Equipo 1")
 equipo2 = config.get("equipo2", "Equipo 2")
 hora = config.get("hora", "")
 descripcion = config.get("descripcion", "")
-activo = str(config.get("activo", "")).strip().lower() == "true"
-resultado1 = config.get("resultado1", "")
-resultado2 = config.get("resultado2", "")
+activo = config.get("activo", False)
+resultado1 = config.get("resultado1", 0)
+resultado2 = config.get("resultado2", 0)
 
 st.markdown(
     "<h1 style='text-align: center;'>¡En La Central, el Mundial se vive mejor!⚽</h1>",
