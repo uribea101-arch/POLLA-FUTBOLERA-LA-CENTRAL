@@ -23,6 +23,21 @@ def conectar_firestore():
 
 db = conectar_firestore()
 
+# 🔥 Leer apuestas desde Firestore
+@st.cache_data(ttl=10)
+def cargar_apuestas():
+
+    docs = db.collection("apuestas").stream()
+
+    data = []
+
+    for doc in docs:
+        data.append(doc.to_dict())
+
+    return pd.DataFrame(data)
+
+df = cargar_apuestas()
+
 # 🔥 Leer configuración desde Firestore
 @st.cache_data(ttl=10)
 def cargar_config():
@@ -190,7 +205,7 @@ if st.session_state.admin_visible:
                         f"<h2 style='text-align:center;'>🎡 {nombre_random}</h2>",
                         unsafe_allow_html=True
                     )
-                    time.sleep(0.5 + i * 0.02)
+                    time.sleep(0.05 + i * 0.01)
 
                 # 🏆 ganador final
                 fila_ganadora = df_ganadores.sample().iloc[0]
@@ -211,7 +226,6 @@ if st.session_state.admin_visible:
 if st.button("Enviar", use_container_width=True):
 
     # 🧹 limpiar datos
-    # 🧹 limpiar datos
     usuario_original = str(usuario)
     nombre_original = str(nombre)
 
@@ -224,47 +238,45 @@ if st.button("Enviar", use_container_width=True):
     else:
         nombre_limpio = nombre_limpio.title()
 
-        # 🔄 Borramos el caché de la función NUEVA
-        cargar_datos_seguro.clear()
+     # 🔥 refrescar apuestas
+        cargar_apuestas.clear()
 
-        # 🎯 LLAMAMOS A LA FUNCIÓN NUEVA (Aquí estaba el error)
-        data = cargar_datos_seguro() 
-        df = pd.DataFrame(data)
+        df = cargar_apuestas()
 
-        if not df.empty:
-            # Aseguramos que la columna 'usuario' exista para evitar errores
-            if "usuario" in df.columns:
-                usuarios_registrados = (
-                    df["usuario"]
-                    .astype(str)
-                    .str.replace(".0", "", regex=False)
-                    .str.replace(" ", "", regex=False)
-                    .str.strip()
-                    .tolist()
-                )
-            else:
-                usuarios_registrados = []
+        if not df.empty and "usuario" in df.columns:
+
+            usuarios_registrados = (
+                df["usuario"]
+                .astype(str)
+                .str.strip()
+                .tolist()
+            )
+
         else:
             usuarios_registrados = []
 
+        # 🚫 validar duplicado
         if usuario_limpio in usuarios_registrados:
             st.warning("Ya registraste un marcador ❌")
 
         else:
-            # 📝 Guardar en Google Sheets
-            try:
-                sheet.append_row([
-                    usuario_limpio,
-                    nombre_limpio,
-                    goles1,
-                    goles2,
-                    datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                ])
 
-                # Limpiamos caché otra vez para que el contador de participantes suba
-                cargar_datos_seguro.clear()
-                
+            try:
+
+                # 🔥 guardar en Firestore
+                db.collection("apuestas").add({
+                    "usuario": usuario_limpio,
+                    "nombre": nombre_limpio,
+                    "equipo1": goles1,
+                    "equipo2": goles2,
+                    "fecha": datetime.now()
+                })
+
+                # 🔄 limpiar cache
+                cargar_apuestas.clear()
+
                 st.success("Marcador registrado ✅")
-                st.balloons() # ¡Un poco de celebración!
+                st.balloons()
+
             except Exception as e:
-                st.error("No se pudo guardar. Intenta de nuevo en unos segundos.")
+                st.error("No se pudo guardar. Intenta nuevamente.")
