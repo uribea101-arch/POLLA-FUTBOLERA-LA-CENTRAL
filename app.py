@@ -27,8 +27,11 @@ def conectar_sheet():
 spreadsheet = conectar_sheet()
 
 sheet = spreadsheet.worksheet("info")
-config_sheet = spreadsheet.worksheet("config")
-
+try:
+    config_sheet = spreadsheet.worksheet("config")
+except:
+    st.error("⚠️ No se encontró la hoja 'config'")
+    st.stop()
 
 # 📊 Leer datos actuales
 @st.cache_data(ttl=10)
