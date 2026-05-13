@@ -18,8 +18,16 @@ client = gspread.authorize(creds)
 sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1LIqaKuAmNXbySudKobYj3b9jpqzfIVK01vYmyYdGoVY/edit?usp=sharing").worksheet("info")
 
 # 📊 Leer datos actuales
-data = sheet.get_all_records()
-df = pd.DataFrame(data)
+@st.cache_data(ttl=10)
+def cargar_datos():
+    return sheet.get_all_records()
+
+try:
+    data = cargar_datos()
+    df = pd.DataFrame(data)
+except:
+    st.error("⚠️ Google Sheets está ocupado. Intenta nuevamente.")
+    st.stop()
 # 📊 Leer configuración
 config_sheet = client.open("Polla Futbolera").worksheet("config")
 config_data = config_sheet.get_all_records()
