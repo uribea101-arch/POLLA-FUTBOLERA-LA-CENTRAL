@@ -5,26 +5,21 @@ import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
 from datetime import datetime
-
-
 # 🔐 Conexión con Google Sheets
 scope = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive"
 ]
-
 creds = Credentials.from_service_account_info(
     st.secrets["gcp_service_account"], scopes=scope
 )
-
 client = gspread.authorize(creds)
 
-sheet = client.open("Polla Futbolera").sheet1
+sheet = client.open("Polla Futbolera").worksheet("info")
 
 # 📊 Leer datos actuales
 data = sheet.get_all_records()
 df = pd.DataFrame(data)
-
 # 📊 Leer configuración
 config_sheet = client.open("Polla Futbolera").worksheet("config")
 config_data = config_sheet.get_all_records()
