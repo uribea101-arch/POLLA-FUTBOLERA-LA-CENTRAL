@@ -42,7 +42,7 @@ except:
     st.error("⚠️ Google Sheets está ocupado. Intenta nuevamente.")
     st.stop()
 # 📊 Leer configuración
-config_sheet = client.open("Polla Futbolera").worksheet("config")
+config_sheet = spreadsheet.worksheet("config")
 config_data = config_sheet.get_all_records()
 
 config = config_data[0]
