@@ -30,6 +30,16 @@ def conectar_firestore():
 
 db = conectar_firestore()
 
+try:
+    db.collection("test").add({
+        "ok": True
+    })
+
+    st.success("🔥 FIRESTORE FUNCIONA")
+
+except Exception as e:
+    st.error(e)
+    
 # =========================
 # ⚙️ CONFIG
 # =========================
