@@ -12,7 +12,6 @@ import time
 if "admin_visible" not in st.session_state:
     st.session_state.admin_visible = False
 
-# =========================
 # 🔥 FIRESTORE
 # =========================
 @st.cache_resource
