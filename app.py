@@ -271,4 +271,7 @@ if st.button("Enviar", use_container_width=True):
                 goles2,
                 datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             ])
+
+            cargar_datos.clear()
+            
             st.success("Marcador registrado ✅")
