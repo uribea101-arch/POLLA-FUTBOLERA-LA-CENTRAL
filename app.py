@@ -1,36 +1,27 @@
 import streamlit as st
 if "admin_visible" not in st.session_state:
     st.session_state.admin_visible = False
-import gspread
-from google.oauth2.service_account import Credentials
+import firebase_admin
+from firebase_admin import credentials, firestore
 import pandas as pd
 from datetime import datetime
 import time
-from gspread.exceptions import APIError
 
-# 🔐 Conexión con Google Sheets
-scope = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"
-]
-
+# 🔥 Conexión Firestore
 @st.cache_resource
-def conectar_y_obtener_hojas():
-    creds = Credentials.from_service_account_info(
-        st.secrets["gcp_service_account"],
-        scopes=scope
-    )
-    client = gspread.authorize(creds)
-    sh = client.open_by_url("https://docs.google.com/spreadsheets/d/1LIqaKuAmNXbySudKobYj3b9jpqzfIVK01vYmyYdGoVY/edit?usp=sharing")
-    return {
-        "info": sh.worksheet("info"),
-        "config": sh.worksheet("config")
-    }
+def conectar_firestore():
 
-# Obtener las hojas (esto se ejecuta una sola vez gracias al caché)
-hojas = conectar_y_obtener_hojas()
-sheet = hojas["info"]
-config_sheet = hojas["config"]
+    if not firebase_admin._apps:
+
+        cred = credentials.Certificate(
+            dict(st.secrets["gcp_service_account"])
+        )
+
+        firebase_admin.initialize_app(cred)
+
+    return firestore.client()
+
+db = conectar_firestore()
 
 # 📊 Funciones de carga con sistema de reintentos
 @st.cache_data(ttl=300) # Subimos a 60 segundos para evitar bloqueos
