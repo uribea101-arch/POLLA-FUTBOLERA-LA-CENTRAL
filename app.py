@@ -1,13 +1,20 @@
 import streamlit as st
-if "admin_visible" not in st.session_state:
-    st.session_state.admin_visible = False
 import firebase_admin
 from firebase_admin import credentials, firestore
 import pandas as pd
 from datetime import datetime
+import random
 import time
 
-# 🔥 Conexión Firestore
+# =========================
+# 🔐 SESSION
+# =========================
+if "admin_visible" not in st.session_state:
+    st.session_state.admin_visible = False
+
+# =========================
+# 🔥 FIRESTORE
+# =========================
 @st.cache_resource
 def conectar_firestore():
 
@@ -22,8 +29,33 @@ def conectar_firestore():
     return firestore.client()
 
 db = conectar_firestore()
-st.success("🔥 Firestore conectado")
-# 🔥 Leer apuestas desde Firestore
+
+# =========================
+# ⚙️ CONFIG
+# =========================
+@st.cache_data(ttl=10)
+def cargar_config():
+
+    doc = db.collection("config").document("partido_actual").get()
+
+    if doc.exists:
+        return doc.to_dict()
+
+    return {}
+
+config = cargar_config()
+
+equipo1 = config.get("equipo1", "Equipo 1")
+equipo2 = config.get("equipo2", "Equipo 2")
+hora = config.get("hora", "")
+descripcion = config.get("descripcion", "")
+activo = config.get("activo", False)
+resultado1 = config.get("resultado1", 0)
+resultado2 = config.get("resultado2", 0)
+
+# =========================
+# 📊 APUESTAS
+# =========================
 @st.cache_data(ttl=10)
 def cargar_apuestas():
 
@@ -38,37 +70,18 @@ def cargar_apuestas():
 
 df = cargar_apuestas()
 
-# 🔥 Leer configuración desde Firestore
-@st.cache_data(ttl=10)
-def cargar_config():
-
-    doc = db.collection("config").document("partido_actual").get()
-
-    if doc.exists:
-        return doc.to_dict()
-
-    return {}
-
-config = cargar_config()
-
-# 📝 Variables de configuración
-equipo1 = config.get("equipo1", "Equipo 1")
-equipo2 = config.get("equipo2", "Equipo 2")
-hora = config.get("hora", "")
-descripcion = config.get("descripcion", "")
-activo = config.get("activo", False)
-resultado1 = config.get("resultado1", 0)
-resultado2 = config.get("resultado2", 0)
-
+# =========================
+# 🎨 HEADER
+# =========================
 st.markdown(
-    "<h1 style='text-align: center;'>¡En La Central, el Mundial se vive mejor!⚽</h1>",
+    "<h1 style='text-align: center;'>⚽ ¡En La Central, el Mundial se vive mejor!</h1>",
     unsafe_allow_html=True
 )
 
-
+# 🔒 Botón oculto admin
 st.markdown("""
 <div style="position: relative; height: 0px;">
-    <a href="?admin=true" 
+    <a href="?admin=true"
        style="
        position: absolute;
        top: -10px;
@@ -84,7 +97,10 @@ st.markdown("""
 
 if "admin" in st.query_params:
     st.session_state.admin_visible = True
-     
+
+# =========================
+# ⚽ EQUIPOS
+# =========================
 colA, colB, colC = st.columns([2,1,2])
 
 with colA:
@@ -108,22 +124,29 @@ with colC:
         <b>{equipo2}</b>
     </div>
     """, unsafe_allow_html=True)
+
 st.write(f"🕒 {hora}")
 st.caption(descripcion)
 st.write(f"👥 Participantes: {len(df)}")
 
-# 🔒 BLOQUEO TOTAL
+# =========================
+# 🔒 BLOQUEO
+# =========================
 if not activo:
     st.warning("Las apuestas están cerradas ❌")
     st.stop()
 
-# 🧾 Formulario
-usuario = st.text_input("🪪Cédula")
-nombre = st.text_input("Nombre completo (como en la cédula)✍️")
+# =========================
+# 🧾 FORMULARIO
+# =========================
+usuario = st.text_input("🪪 Cédula")
+nombre = st.text_input("✍️ Nombre completo (como en la cédula)")
+
 col1, col2 = st.columns(2, gap="small")
 
 # 🟡 Equipo 1
 with col1:
+
     st.markdown(f"""
     <div style='text-align:center;'>
         <img src='https://flagcdn.com/w40/uz.png'><br>
@@ -141,6 +164,7 @@ with col1:
 
 # 🔵 Equipo 2
 with col2:
+
     st.markdown(f"""
     <div style='text-align:center;'>
         <img src='https://flagcdn.com/w40/co.png'><br>
@@ -156,8 +180,11 @@ with col2:
         label_visibility="collapsed"
     )
 
+# =========================
+# 🔐 PANEL ADMIN
+# =========================
 if st.session_state.admin_visible:
-    
+
     st.divider()
     st.subheader("🔐 Panel Admin")
 
@@ -167,20 +194,21 @@ if st.session_state.admin_visible:
     if admin_pass == admin_secret:
 
         if st.button("🎡 Elegir ganador"):
-            
-            import random
-            import time
 
-            # 🛑 validar si ya hay resultado
+            # 🚫 validar resultados
             if str(resultado1).strip() == "" or str(resultado2).strip() == "":
-                st.warning("⏳ Aún no se ha definido el resultado del partido")
+                st.warning("⏳ Aún no se ha definido el resultado")
                 st.stop()
 
-            # ✅ limpiar y convertir resultado
-            resultado1_int = int(str(resultado1).strip().replace(".0", ""))
-            resultado2_int = int(str(resultado2).strip().replace(".0", ""))
+            resultado1_int = int(resultado1)
+            resultado2_int = int(resultado2)
 
-            # 🧠 asegurar tipos correctos
+            # 🚫 si no hay apuestas
+            if df.empty:
+                st.error("No hay participantes")
+                st.stop()
+
+            # 🧠 asegurar enteros
             df["equipo1"] = df["equipo1"].astype(int)
             df["equipo2"] = df["equipo2"].astype(int)
 
@@ -190,24 +218,36 @@ if st.session_state.admin_visible:
                 (df["equipo2"] == resultado2_int)
             ]
 
+            # 🚫 nadie acertó
             if df_ganadores.empty:
+
                 st.error("Nadie acertó el marcador 😢")
+
             else:
-                st.success(f"🎯 {len(df_ganadores)} personas acertaron!")
+
+                st.success(f"🎯 {len(df_ganadores)} personas acertaron")
 
                 nombres = df_ganadores["nombre"].tolist()
+
                 placeholder = st.empty()
 
-                # 🎡 animación
+                # 🎡 RULETA
                 for i in range(20):
+
                     nombre_random = random.choice(nombres)
+
                     placeholder.markdown(
-                        f"<h2 style='text-align:center;'>🎡 {nombre_random}</h2>",
+                        f"""
+                        <h2 style='text-align:center;'>
+                        🎡 {nombre_random}
+                        </h2>
+                        """,
                         unsafe_allow_html=True
                     )
+
                     time.sleep(0.05 + i * 0.01)
 
-                # 🏆 ganador final
+                # 🏆 ganador
                 fila_ganadora = df_ganadores.sample().iloc[0]
 
                 nombre_ganador = fila_ganadora["nombre"]
@@ -215,37 +255,49 @@ if st.session_state.admin_visible:
 
                 placeholder.markdown(
                     f"""
-                    <h1 style='text-align:center; color:green;'>🏆 GANADOR 🏆</h1>
-                    <h2 style='text-align:center;'>{nombre_ganador}</h2>
-                    <h3 style='text-align:center;'>🪪Cédula: {cedula_ganador}</h3>
+                    <h1 style='text-align:center; color:green;'>
+                    🏆 GANADOR 🏆
+                    </h1>
+
+                    <h2 style='text-align:center;'>
+                    {nombre_ganador}
+                    </h2>
+
+                    <h3 style='text-align:center;'>
+                    🪪 Cédula: {cedula_ganador}
+                    </h3>
                     """,
                     unsafe_allow_html=True
                 )
 
                 st.balloons()
+
+# =========================
+# 📩 ENVIAR
+# =========================
 if st.button("Enviar", use_container_width=True):
 
-    # 🧹 limpiar datos
     usuario_original = str(usuario)
     nombre_original = str(nombre)
 
     usuario_limpio = ''.join(filter(str.isdigit, usuario_original))
     nombre_limpio = nombre_original.strip().title()
 
-    # 🚫 validar campos vacíos
+    # 🚫 validar campos
     if usuario_limpio == "" or nombre_limpio == "":
+
         st.error("Debes completar todos los campos")
 
     else:
 
         try:
 
-            # 🔥 refrescar apuestas
+            # 🔄 refrescar apuestas
             cargar_apuestas.clear()
 
             df = cargar_apuestas()
 
-            # 🔍 validar duplicados
+            # 🧠 usuarios existentes
             if not df.empty and "usuario" in df.columns:
 
                 usuarios_registrados = (
@@ -258,14 +310,14 @@ if st.button("Enviar", use_container_width=True):
             else:
                 usuarios_registrados = []
 
-            # 🚫 cédula repetida
+            # 🚫 duplicado
             if usuario_limpio in usuarios_registrados:
 
                 st.warning("Ya registraste un marcador ❌")
 
             else:
 
-                # 🔥 guardar apuesta
+                # 🔥 guardar en Firestore
                 db.collection("apuestas").add({
                     "usuario": usuario_limpio,
                     "nombre": nombre_limpio,
