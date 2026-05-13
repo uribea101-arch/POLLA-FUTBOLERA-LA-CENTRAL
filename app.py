@@ -203,7 +203,7 @@ if st.session_state.admin_visible:
 
     if admin_pass == admin_secret:
 
-                st.divider()
+        st.divider()
         st.subheader("⚙️ Configuración Evento")
 
         nuevo_equipo1 = st.text_input(
@@ -255,7 +255,7 @@ if st.session_state.admin_visible:
             value=activo
         )
 
-        # 💾 guardar config
+        # 💾 guardar configuración
         if st.button("💾 Guardar configuración"):
 
             try:
