@@ -70,7 +70,7 @@ def cargar_apuestas():
 
 df = cargar_apuestas()
 
-# =========================
+
 # 🎨 HEADER
 # =========================
 st.markdown(
