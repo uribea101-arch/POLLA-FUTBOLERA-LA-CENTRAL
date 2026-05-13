@@ -230,45 +230,47 @@ if st.button("Enviar", use_container_width=True):
     nombre_original = str(nombre)
 
     usuario_limpio = ''.join(filter(str.isdigit, usuario_original))
-    nombre_limpio = nombre_original.strip()
+    nombre_limpio = nombre_original.strip().title()
 
+    # 🚫 validar campos vacíos
     if usuario_limpio == "" or nombre_limpio == "":
         st.error("Debes completar todos los campos")
 
     else:
-        nombre_limpio = nombre_limpio.title()
 
-     # 🔥 refrescar apuestas
-        cargar_apuestas.clear()
+        try:
 
-        df = cargar_apuestas()
+            # 🔥 refrescar apuestas
+            cargar_apuestas.clear()
 
-        if not df.empty and "usuario" in df.columns:
+            df = cargar_apuestas()
 
-            usuarios_registrados = (
-                df["usuario"]
-                .astype(str)
-                .str.strip()
-                .tolist()
-            )
+            # 🔍 validar duplicados
+            if not df.empty and "usuario" in df.columns:
 
-        else:
-            usuarios_registrados = []
+                usuarios_registrados = (
+                    df["usuario"]
+                    .astype(str)
+                    .str.strip()
+                    .tolist()
+                )
 
-        # 🚫 validar duplicado
-        if usuario_limpio in usuarios_registrados:
-            st.warning("Ya registraste un marcador ❌")
+            else:
+                usuarios_registrados = []
 
-        else:
+            # 🚫 cédula repetida
+            if usuario_limpio in usuarios_registrados:
 
-            try:
+                st.warning("Ya registraste un marcador ❌")
 
-                # 🔥 guardar en Firestore
+            else:
+
+                # 🔥 guardar apuesta
                 db.collection("apuestas").add({
                     "usuario": usuario_limpio,
                     "nombre": nombre_limpio,
-                    "equipo1": goles1,
-                    "equipo2": goles2,
+                    "equipo1": int(goles1),
+                    "equipo2": int(goles2),
                     "fecha": datetime.now()
                 })
 
@@ -278,5 +280,6 @@ if st.button("Enviar", use_container_width=True):
                 st.success("Marcador registrado ✅")
                 st.balloons()
 
-            except Exception as e:
-                st.error("No se pudo guardar. Intenta nuevamente.")
+        except Exception as e:
+
+            st.error(e)
