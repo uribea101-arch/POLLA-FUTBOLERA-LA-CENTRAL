@@ -235,15 +235,12 @@ if st.session_state.admin_visible:
 if st.button("Enviar", use_container_width=True):
 
     # 🧹 limpiar datos
+    # 🧹 limpiar datos
     usuario_original = str(usuario)
     nombre_original = str(nombre)
 
     usuario_limpio = ''.join(filter(str.isdigit, usuario_original))
     nombre_limpio = nombre_original.strip()
-
-    # 🔍 debug visual (puedes quitarlo luego)
-    # st.write(f"DEBUG usuario: '{usuario_limpio}'")
-    # st.write(f"DEBUG nombre: '{nombre_limpio}'")
 
     if usuario_limpio == "" or nombre_limpio == "":
         st.error("Debes completar todos los campos")
@@ -251,21 +248,26 @@ if st.button("Enviar", use_container_width=True):
     else:
         nombre_limpio = nombre_limpio.title()
 
-        # 🔄 refrescar datos
-        cargar_datos.clear()
+        # 🔄 Borramos el caché de la función NUEVA
+        cargar_datos_seguro.clear()
 
-        data = cargar_datos()
+        # 🎯 LLAMAMOS A LA FUNCIÓN NUEVA (Aquí estaba el error)
+        data = cargar_datos_seguro() 
         df = pd.DataFrame(data)
 
         if not df.empty:
-            usuarios_registrados = (
-                df["usuario"]
-                .astype(str)
-                .str.replace(".0", "", regex=False)
-                .str.replace(" ", "", regex=False)
-                .str.strip()
-                .tolist()
-            )
+            # Aseguramos que la columna 'usuario' exista para evitar errores
+            if "usuario" in df.columns:
+                usuarios_registrados = (
+                    df["usuario"]
+                    .astype(str)
+                    .str.replace(".0", "", regex=False)
+                    .str.replace(" ", "", regex=False)
+                    .str.strip()
+                    .tolist()
+                )
+            else:
+                usuarios_registrados = []
         else:
             usuarios_registrados = []
 
@@ -273,14 +275,20 @@ if st.button("Enviar", use_container_width=True):
             st.warning("Ya registraste un marcador ❌")
 
         else:
-            sheet.append_row([
-                usuario_limpio,
-                nombre_limpio,
-                goles1,
-                goles2,
-                datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            ])
+            # 📝 Guardar en Google Sheets
+            try:
+                sheet.append_row([
+                    usuario_limpio,
+                    nombre_limpio,
+                    goles1,
+                    goles2,
+                    datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                ])
 
-            cargar_datos.clear()
-            
-            st.success("Marcador registrado ✅")
+                # Limpiamos caché otra vez para que el contador de participantes suba
+                cargar_datos_seguro.clear()
+                
+                st.success("Marcador registrado ✅")
+                st.balloons() # ¡Un poco de celebración!
+            except Exception as e:
+                st.error("No se pudo guardar. Intenta de nuevo en unos segundos.")
