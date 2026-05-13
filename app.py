@@ -15,7 +15,7 @@ creds = Credentials.from_service_account_info(
 )
 client = gspread.authorize(creds)
 
-sheet = client.open("Polla Futbolera").worksheet("info")
+sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1LIqaKuAmNXbySudKobYj3b9jpqzfIVK01vYmyYdGoVY/edit?usp=sharing").worksheet("info")
 
 # 📊 Leer datos actuales
 data = sheet.get_all_records()
