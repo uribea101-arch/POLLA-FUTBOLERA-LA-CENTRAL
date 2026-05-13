@@ -241,7 +241,9 @@ if st.button("Enviar", use_container_width=True):
         nombre_limpio = nombre_limpio.title()
 
         # 🔄 refrescar datos
-        data = sheet.get_all_records()
+        cargar_datos.clear()
+
+        data = cargar_datos()
         df = pd.DataFrame(data)
 
         if not df.empty:
