@@ -46,9 +46,11 @@ except:
     st.stop()
 # 📊 Leer configuración
 config_sheet = spreadsheet.worksheet("config")
-config_data = config_sheet.get_all_records()
+@st.cache_data(ttl=10)
+def cargar_config():
+    return config_sheet.get_all_records()[0]
 
-config = config_data[0]
+config = cargar_config()
 
 equipo1 = config["equipo1"]
 equipo2 = config["equipo2"]
