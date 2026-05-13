@@ -10,12 +10,25 @@ scope = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive"
 ]
-creds = Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"], scopes=scope
-)
-client = gspread.authorize(creds)
+@st.cache_resource
+def conectar_sheet():
 
-sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1LIqaKuAmNXbySudKobYj3b9jpqzfIVK01vYmyYdGoVY/edit?usp=sharing").worksheet("info")
+    creds = Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=scope
+    )
+
+    client = gspread.authorize(creds)
+
+    return client.open_by_url(
+        "https://docs.google.com/spreadsheets/d/1LIqaKuAmNXbySudKobYj3b9jpqzfIVK01vYmyYdGoVY/edit?usp=sharing"
+    )
+
+spreadsheet = conectar_sheet()
+
+sheet = spreadsheet.worksheet("info")
+config_sheet = spreadsheet.worksheet("config")
+
 
 # 📊 Leer datos actuales
 @st.cache_data(ttl=10)
