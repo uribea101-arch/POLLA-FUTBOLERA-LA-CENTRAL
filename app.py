@@ -5,60 +5,69 @@ import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
 from datetime import datetime
+import time
+from gspread.exceptions import APIError
+
 # 🔐 Conexión con Google Sheets
 scope = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive"
 ]
-@st.cache_resource
-def conectar_sheet():
 
+@st.cache_resource
+def conectar_y_obtener_hojas():
     creds = Credentials.from_service_account_info(
         st.secrets["gcp_service_account"],
         scopes=scope
     )
-
     client = gspread.authorize(creds)
+    sh = client.open_by_url("https://docs.google.com/spreadsheets/d/1LIqaKuAmNXbySudKobYj3b9jpqzfIVK01vYmyYdGoVY/edit?usp=sharing")
+    return {
+        "info": sh.worksheet("info"),
+        "config": sh.worksheet("config")
+    }
 
-    return client.open_by_url(
-        "https://docs.google.com/spreadsheets/d/1LIqaKuAmNXbySudKobYj3b9jpqzfIVK01vYmyYdGoVY/edit?usp=sharing"
-    )
+# Obtener las hojas (esto se ejecuta una sola vez gracias al caché)
+hojas = conectar_y_obtener_hojas()
+sheet = hojas["info"]
+config_sheet = hojas["config"]
 
-spreadsheet = conectar_sheet()
+# 📊 Funciones de carga con sistema de reintentos
+@st.cache_data(ttl=60) # Subimos a 60 segundos para evitar bloqueos
+def cargar_datos_seguro():
+    for i in range(3):
+        try:
+            return sheet.get_all_records()
+        except APIError:
+            time.sleep(2)
+    return []
 
-sheet = spreadsheet.worksheet("info")
+@st.cache_data(ttl=60)
+def cargar_config_seguro():
+    for i in range(3):
+        try:
+            return config_sheet.get_all_records()[0]
+        except APIError:
+            time.sleep(2)
+    return {}
+
+# 🛠️ Carga inicial de datos
 try:
-    config_sheet = spreadsheet.worksheet("config")
-except:
-    st.error("⚠️ No se encontró la hoja 'config'")
-    st.stop()
-
-# 📊 Leer datos actuales
-@st.cache_data(ttl=10)
-def cargar_datos():
-    return sheet.get_all_records()
-
-try:
-    data = cargar_datos()
+    data = cargar_datos_seguro()
     df = pd.DataFrame(data)
-except:
-    st.error("⚠️ Google Sheets está ocupado. Intenta nuevamente.")
+    config = cargar_config_seguro()
+except Exception as e:
+    st.error("⚠️ Google Sheets está saturado. Por favor, refresca la página en 10 segundos.")
     st.stop()
-# 📊 Leer configuración
-config_sheet = spreadsheet.worksheet("config")
-@st.cache_data(ttl=10)
-def cargar_config():
-    return config_sheet.get_all_records()[0]
 
-config = cargar_config()
-
-equipo1 = config["equipo1"]
-equipo2 = config["equipo2"]
-hora = config["hora"]
-descripcion = config["descripcion"]
-activo = str(config["activo"]).strip().lower() == "true"
-resultado1 = config["resultado1"]
-resultado2 = config["resultado2"]
+# 📝 Variables de configuración
+equipo1 = config.get("equipo1", "Equipo 1")
+equipo2 = config.get("equipo2", "Equipo 2")
+hora = config.get("hora", "")
+descripcion = config.get("descripcion", "")
+activo = str(config.get("activo", "")).strip().lower() == "true"
+resultado1 = config.get("resultado1", "")
+resultado2 = config.get("resultado2", "")
 
 st.markdown(
     "<h1 style='text-align: center;'>¡En La Central, el Mundial se vive mejor!⚽</h1>",
