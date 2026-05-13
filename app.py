@@ -22,7 +22,7 @@ def conectar_firestore():
     return firestore.client()
 
 db = conectar_firestore()
-
+st.success("🔥 Firestore conectado")
 # 🔥 Leer apuestas desde Firestore
 @st.cache_data(ttl=10)
 def cargar_apuestas():
