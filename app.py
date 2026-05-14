@@ -291,6 +291,33 @@ if st.session_state.admin_visible:
 
                 st.error(e)
 
+
+        # 📥 EXPORTAR EXCEL
+        if not df.empty:
+
+            excel_buffer = BytesIO()
+
+            with pd.ExcelWriter(
+                excel_buffer,
+                engine="openpyxl"
+            ) as writer:
+
+                df.to_excel(
+                    writer,
+                    index=False,
+                    sheet_name="Participantes"
+                )
+
+            excel_data = excel_buffer.getvalue()
+
+            st.download_button(
+                label="📥 Descargar participantes Excel",
+                data=excel_data,
+                file_name="participantes.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+
         # 🗑️ reiniciar participantes
         if st.button("🗑️ Reiniciar participantes"):
 
