@@ -139,12 +139,17 @@ st.write(f"🕒 {hora}")
 st.caption(descripcion)
 st.write(f"👥 Participantes: {len(df)}")
 
+
 # =========================
 # 🔒 BLOQUEO
 # =========================
+apuestas_cerradas = False
+
 if not activo:
+
+    apuestas_cerradas = True
+
     st.warning("Las apuestas están cerradas ❌")
-    st.stop()
 
 # =========================
 # 🧾 FORMULARIO
