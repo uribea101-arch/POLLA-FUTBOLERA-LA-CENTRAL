@@ -3,7 +3,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import pandas as pd
 from io import BytesIO
-from datetime import datetime
+from datetime import datetime, timedelta
 import random
 import time
 
@@ -53,6 +53,10 @@ descripcion = config.get("descripcion", "")
 activo = config.get("activo", False)
 resultado1 = config.get("resultado1", 0)
 resultado2 = config.get("resultado2", 0)
+hora_cierre = config.get(
+    "hora_cierre",
+    ""
+)
 
 bandera1 = config.get(
     "bandera1",
@@ -140,18 +144,33 @@ st.write(f"🕒 {hora}")
 st.caption(descripcion)
 st.write(f"👥 Participantes: {len(df)}")
 
-
 # =========================
 # 🔒 BLOQUEO
 # =========================
 apuestas_cerradas = False
+
+# 🕒 cierre automático
+if hora_cierre != "":
+
+    try:
+
+        fecha_cierre = datetime.strptime(
+            hora_cierre,
+            "%Y-%m-%d %H:%M"
+        )
+
+        if datetime.now() >= fecha_cierre:
+
+            activo = False
+
+    except:
+        pass
 
 if not activo:
 
     apuestas_cerradas = True
 
     st.warning("Las apuestas están cerradas ❌")
-
 # =========================
 # 🧾 FORMULARIO
 # =========================
@@ -237,6 +256,11 @@ if st.session_state.admin_visible:
             value=hora
         )
 
+        nueva_hora_cierre = st.text_input(
+            "Hora cierre automática (YYYY-MM-DD HH:MM)",
+            value=hora_cierre
+        )
+
         nueva_descripcion = st.text_area(
             "Descripción",
             value=descripcion
@@ -275,6 +299,7 @@ if st.session_state.admin_visible:
                     "bandera2": nueva_bandera2,
 
                     "hora": nueva_hora,
+                    "hora_cierre": nueva_hora_cierre,
                     "descripcion": nueva_descripcion,
 
                     "resultado1": int(nuevo_resultado1),
