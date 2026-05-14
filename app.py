@@ -2,6 +2,7 @@ import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
 import pandas as pd
+from io import BytesIO
 from datetime import datetime
 import random
 import time
