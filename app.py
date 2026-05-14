@@ -391,7 +391,13 @@ if st.session_state.admin_visible:
 # =========================
 # 📩 ENVIAR
 # =========================
-if st.button("Enviar", use_container_width=True):
+
+if st.button(
+    "Enviar",
+    use_container_width=True,
+    disabled=apuestas_cerradas
+):
+
 
     usuario_original = str(usuario)
     nombre_original = str(nombre)
