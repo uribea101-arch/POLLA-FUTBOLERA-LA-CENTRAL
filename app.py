@@ -297,12 +297,22 @@ if st.session_state.admin_visible:
 
             excel_buffer = BytesIO()
 
+            # 🧹 convertir fechas a texto
+            df_export = df.copy()
+
+            if "fecha" in df_export.columns:
+
+                df_export["fecha"] = (
+                    df_export["fecha"]
+                    .astype(str)
+                )
+
             with pd.ExcelWriter(
                 excel_buffer,
                 engine="openpyxl"
             ) as writer:
 
-                df.to_excel(
+                df_export.to_excel(
                     writer,
                     index=False,
                     sheet_name="Participantes"
