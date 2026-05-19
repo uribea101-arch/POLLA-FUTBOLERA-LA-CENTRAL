@@ -1,4 +1,6 @@
 import streamlit as st
+import os
+import json
 import firebase_admin
 from firebase_admin import credentials, firestore
 import pandas as pd
@@ -21,9 +23,11 @@ def conectar_firestore():
 
     if not firebase_admin._apps:
 
-        cred = credentials.Certificate(
-            dict(st.secrets["gcp_service_account"])
+        firebase_key = json.loads(
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS_JSON"]
         )
+
+        cred = credentials.Certificate(firebase_key)
 
         firebase_admin.initialize_app(cred)
 
