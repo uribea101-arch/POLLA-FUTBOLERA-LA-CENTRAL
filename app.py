@@ -488,7 +488,7 @@ if st.button(
                 # 🔄 limpiar cache
                 cargar_apuestas.clear()
 
-                st.success("Marcador registrado ✅")
+                st.success("Marcador registrado, ¡buena suerte! ✅")
                 st.balloons()
 
         except Exception as e:
