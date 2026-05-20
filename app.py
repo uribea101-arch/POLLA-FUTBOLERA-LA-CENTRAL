@@ -89,7 +89,7 @@ df = cargar_apuestas()
 # 🎨 HEADER
 # =========================
 st.markdown(
-    "<h1 style='text-align: center;'>⚽ ¡En La Central, el Mundial se vive mejor!</h1>",
+    "<h1 style='text-align: center;'>⚽ ¡Acierta el marcador y GANA!</h1>",
     unsafe_allow_html=True
 )
 
