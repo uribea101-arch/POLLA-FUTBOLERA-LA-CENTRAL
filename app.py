@@ -143,7 +143,7 @@ with colC:
 
 st.write(f"🕒 {hora}")
 st.caption(descripcion)
-st.write("👥 Participantes: Disponible en panel admin")
+st.write("👥 Participantes: Cargando participantes")
 
 # =========================
 # 🔒 BLOQUEO
