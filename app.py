@@ -9,15 +9,11 @@ from datetime import datetime
 import random
 import time
 
-# =========================
 # 🔐 SESSION
-# =========================
 if "admin_visible" not in st.session_state:
     st.session_state.admin_visible = False
 
-# =========================
 # 🔥 FIRESTORE
-# =========================
 @st.cache_resource
 def conectar_firestore():
 
@@ -36,9 +32,7 @@ def conectar_firestore():
 db = conectar_firestore()
 inicio = time.time()
 
-# =========================
 # ⚙️ CONFIG
-# =========================
 @st.cache_data(ttl=10)
 def cargar_config():
 
@@ -69,9 +63,7 @@ bandera2 = config.get(
     "https://flagcdn.com/w80/co.png"
 )
 
-# =========================
 # 📊 APUESTAS
-# =========================
 @st.cache_data(ttl=10)
 def cargar_apuestas():
 
@@ -87,9 +79,7 @@ def cargar_apuestas():
 # No cargar apuestas al abrir la app
 df = pd.DataFrame()
 
-# =========================
 # 🎨 HEADER
-# =========================
 st.markdown(
     "<h1 style='text-align: center;'>¡Acierta el marcador y GANA!</h1>",
     unsafe_allow_html=True
@@ -115,9 +105,7 @@ st.markdown("""
 if "admin" in st.query_params:
     st.session_state.admin_visible = True
 
-# =========================
 # ⚽ EQUIPOS
-# =========================
 colA, colB, colC = st.columns([2,1,2])
 
 with colA:
@@ -144,11 +132,7 @@ with colC:
 
 st.write(f"🕒 {hora}")
 st.caption(descripcion)
-st.write("👥 Participantes: Cargando participantes")
-
-# =========================
 # 🔒 BLOQUEO
-# =========================
 apuestas_cerradas = False
 
 if not activo:
@@ -157,9 +141,7 @@ if not activo:
 
     st.warning("Las apuestas están cerradas ❌")
 
-# =========================
 # 🧾 FORMULARIO
-# =========================
 usuario = st.text_input("🪪 Cédula")
 nombre = st.text_input("✍️ Nombre completo (como en la cédula)")
 
@@ -200,10 +182,7 @@ with col2:
         key="g2",
         label_visibility="collapsed"
     )
-
-# =========================
 # 🔐 PANEL ADMIN
-# =========================
 if st.session_state.admin_visible:
 
     st.divider()
@@ -300,7 +279,6 @@ if st.session_state.admin_visible:
             except Exception as e:
 
                 st.error(e)
-
 
         # 📥 EXPORTAR EXCEL
         if not df.empty:
@@ -435,17 +413,12 @@ if st.session_state.admin_visible:
                 )
 
                 st.balloons()
-
-# =========================
 # 📩 ENVIAR
-# =========================
-
 if st.button(
     "Enviar",
     use_container_width=True,
     disabled=apuestas_cerradas
 ):
-
 
     usuario_original = str(usuario)
     nombre_original = str(nombre)
