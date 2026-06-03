@@ -50,7 +50,6 @@ def cargar_config():
     return {}
 
 config = cargar_config()
-st.write(f"⏱ Config: {round(time.time()-inicio,2)}s")
 
 equipo1 = config.get("equipo1", "Equipo 1")
 equipo2 = config.get("equipo2", "Equipo 2")
@@ -88,7 +87,6 @@ def cargar_apuestas():
 # No cargar apuestas al abrir la app
 df = pd.DataFrame()
 
-st.write(f"⏱ Página cargada: {round(time.time()-inicio,2)}s")
 # =========================
 # 🎨 HEADER
 # =========================
