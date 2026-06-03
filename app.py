@@ -71,8 +71,11 @@ bandera2 = config.get(
 # =========================
 # 📊 APUESTAS
 # =========================
+# =========================
+# 📊 APUESTAS
+# =========================
 @st.cache_data(ttl=10)
-df = pd.DataFrame()
+def cargar_apuestas():
 
     docs = db.collection("apuestas").stream()
 
@@ -83,7 +86,8 @@ df = pd.DataFrame()
 
     return pd.DataFrame(data)
 
-df = cargar_apuestas()
+# ⚡ No cargar apuestas al abrir la app
+df = pd.DataFrame()
 
 # =========================
 # 🎨 HEADER
