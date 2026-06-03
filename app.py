@@ -72,7 +72,7 @@ bandera2 = config.get(
 # 📊 APUESTAS
 # =========================
 @st.cache_data(ttl=10)
-def cargar_apuestas():
+df = pd.DataFrame()
 
     docs = db.collection("apuestas").stream()
 
@@ -142,7 +142,7 @@ with colC:
 
 st.write(f"🕒 {hora}")
 st.caption(descripcion)
-st.write(f"👥 Participantes: {len(df)}")
+st.write("👥 Participantes: Disponible en panel admin")
 
 # =========================
 # 🔒 BLOQUEO
@@ -214,6 +214,8 @@ if st.session_state.admin_visible:
     )
 
     if admin_pass == admin_secret:
+        
+        df = cargar_apuestas()
 
         st.divider()
         st.subheader("⚙️ Configuración Evento")
@@ -458,33 +460,16 @@ if st.button(
 
         try:
 
-            # 🔄 refrescar apuestas
-            cargar_apuestas.clear()
+            doc = db.collection("apuestas").document(usuario_limpio).get()
 
-            df = cargar_apuestas()
-
-            # 🧠 usuarios existentes
-            if not df.empty and "usuario" in df.columns:
-
-                usuarios_registrados = (
-                    df["usuario"]
-                    .astype(str)
-                    .str.strip()
-                    .tolist()
-                )
-
-            else:
-                usuarios_registrados = []
-
-            # 🚫 duplicado
-            if usuario_limpio in usuarios_registrados:
+            if doc.exists:
 
                 st.warning("Ya registraste un marcador ❌")
 
             else:
 
                 # 🔥 guardar en Firestore
-                db.collection("apuestas").add({
+                db.collection("apuestas").document(usuario_limpio).set({
                     "usuario": usuario_limpio,
                     "nombre": nombre_limpio,
                     "equipo1": int(goles1),
